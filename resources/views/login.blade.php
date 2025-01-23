@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="container mt-5" style="max-width: 300px">
-    <form action="{{ route('login.post') }}" method="post">
+    <form class="position-absolute top-50 start-50 translate-middle" action="{{ route('login.post') }}" method="post">
 
         @csrf
 
