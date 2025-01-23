@@ -176,7 +176,7 @@
                             <tbody>
                             @foreach($products as $product)
                             <tr class="align-middle">
-                                <td>Тут будет название категории</td>
+                                <td>{{ $product->category->title }}</td>
                                 <td>{{ $product->title }}</td>
                                 <td>@if($product->unit)
                                         {{ $product->unit }}
