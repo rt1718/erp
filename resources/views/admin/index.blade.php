@@ -73,13 +73,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('products.index') }}" class="nav-link">
                                         <i class="nav-icon bi bi-clipboard2"></i>
                                         <p>Все товары</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('products.create') }}" class="nav-link">
                                         <i class="nav-icon bi bi-plus-circle"></i>
                                         <p>Добавить товар</p>
                                     </a>
