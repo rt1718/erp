@@ -7,27 +7,35 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           crossorigin="anonymous">
 </head>
+
 <body>
 
 @if(!request()->routeIs('login'))
-<header>
-    <!-- Общий хедер -->
-    <nav>
-        <a href="/">Главная</a>
-        <a href="/about">О нас</a>
-    </nav>
-</header>
+    <header>
+        <!-- Общий хедер -->
+        <nav>
+            <a href="/">Главная</a>
+            <a href="/about">О нас</a>
+        </nav>
+    </header>
 @endif
 
 <main>
-    @yield('content') <!-- Сюда будет вставляться контент из дочерних вьюх -->
+
+@yield('content')
+
 </main>
 
 @if(!request()->routeIs('login'))
-<footer>
-    <!-- Общий футер -->
-    <p>&copy; {{ date('Y') }} Мой сайт</p>
-</footer>
+    <footer class="app-footer"> <!--begin::To the end-->
+        <div class="float-end d-none d-sm-inline">Anything you want</div> <!--end::To the end--> <!--begin::Copyright-->
+        <strong>
+            Copyright &copy; {{ date('Y') }}
+            <a href="#" class="text-decoration-none">{{ env('APP_NAME') }}</a>.
+        </strong>
+        <!--end::Copyright-->
+    </footer>
+    <!--end::Footer-->
 @endif
 </body>
 </html>
