@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\LoginRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class AuthorizationController extends Controller
@@ -12,15 +13,14 @@ class AuthorizationController extends Controller
         return view('login', ['title' => 'Authorization']);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => 'required',
-        ]);
 
-        if (Auth::attempt($data)) {
-            return redirect()->route('dashboard');
+        $validatedData = $request->validated();
+
+        if (Auth::attempt($validatedData)) {
+            $request->session()->regenerate();
+            return redirect()->route('admin');
         }
 
         return back();
