@@ -39,7 +39,6 @@ class ProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         $validatedData = $request->validated();
-//        dd($validatedData);
 
         Product::query()->create($validatedData);
 
