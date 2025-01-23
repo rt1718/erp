@@ -14,55 +14,39 @@
           crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.min.css"
           crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('') }}">
+    <link rel="stylesheet" href="{{ asset('css/adminlte.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
           crossorigin="anonymous">
 
 </head>
 
-<body>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+<div class="app-wrapper">
+    @yield('nav')
 
-<header>
-    <!-- Общий хедер -->
-    <nav>
-        <a href="/">Главная</a>
-        <a href="/about">О нас</a>
-    </nav>
-</header>
+    @yield('aside')
 
-<main class="app-main">
+    <main class="app-main">
 
-    @yield('content')
+        @yield('content')
 
-</main>
+    </main>
 
 
-<footer class="app-footer"> <!--begin::To the end-->
-    <div class="float-end d-none d-sm-inline">Anything you want</div> <!--end::To the end--> <!--begin::Copyright-->
-    <strong>
-        Copyright &copy; {{ date('Y') }}
-        <a href="#" class="text-decoration-none">{{ env('APP_NAME') }}</a>.
-    </strong>
-    <!--end::Copyright-->
-</footer>
-<!--end::Footer-->
+    <footer class="app-footer"> <!--begin::To the end-->
+        <a href="#" class="text-decoration-none">{{ env('APP_NAME') }}</a>, beta
+    </footer>
 
+    <!--end::Footer-->
+</div>
 <!-- Скрипты футер -->
 <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/browser/overlayscrollbars.browser.es6.min.js"
         crossorigin="anonymous"></script>
-<!--end::Third Party Plugin(OverlayScrollbars)-->
-<!--begin::Required Plugin(popperjs for Bootstrap 5)-->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         crossorigin="anonymous"></script>
-<!--end::Required Plugin(popperjs for Bootstrap 5)-->
-<!--begin::Required Plugin(Bootstrap 5)-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         crossorigin="anonymous"></script>
-<!--end::Required Plugin(Bootstrap 5)-->
-<!--begin::Required Plugin(AdminLTE)-->
-<script src="{{ asset('js/js/adminlte.js') }}"></script>
-<!--end::Required Plugin(AdminLTE)-->
-<!--begin::OverlayScrollbars Configure-->
+<script src="{{ asset('js/adminlte.js') }}"></script>
 <script>
     const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
     const Default = {
@@ -86,8 +70,6 @@
         }
     });
 </script>
-<!--end::OverlayScrollbars Configure-->
-<!-- OPTIONAL SCRIPTS -->
 <!-- apexcharts -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"
         crossorigin="anonymous"></script>

@@ -2,11 +2,8 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AuthorizationController;
+use App\Http\Controllers\LogoutController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::fallback(function () {
     abort(404);
@@ -21,9 +18,12 @@ Route::prefix('login')
             ->name('login.post');
     });
 
-Route::prefix('dashboard')
-    ->middleware('login')
+Route::get('/logout', [LogoutController::class, 'logout'])
+    ->name('logout');
+
+Route::prefix('admin')
+//    ->middleware('login')
     ->group(function () {
-    Route::get('/', [AdminController::class, 'index'])
-        ->name('admin');
-});
+        Route::get('/', [AdminController::class, 'index'])
+            ->name('admin');
+    });
