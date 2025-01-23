@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -12,7 +15,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::query()->orderBy('created_at')->get();
+        return view('admin.product.index', [
+            'products' => $products,
+        ]);
     }
 
     /**
@@ -20,15 +26,23 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::query()->pluck('title', 'id')->all();
+        return view('admin.product.create', [
+            'categories' => $categories,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        //
+        $validatedData = $request->validated();
+//        dd($validatedData);
+
+        Product::query()->create($validatedData);
+
+        return redirect()->route('products.index')->with('success', 'Продукт добавлен!');
     }
 
     /**
