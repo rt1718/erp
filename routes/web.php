@@ -23,7 +23,7 @@ Route::get('/logout', [LogoutController::class, 'logout'])
     ->name('logout');
 
 Route::prefix('admin')
-//    ->middleware('login')
+    ->middleware('login')
     ->group(function () {
         Route::get('/', [AdminController::class, 'index'])
             ->name('admin');
