@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use JetBrains\PhpStorm\NoReturn;
 
 class ProductController extends Controller
 {
@@ -58,15 +59,27 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $products = Product::query()->findOrFail($id);
+        $categories = Category::query()->pluck('title', 'id')->all();
+        return view('admin.product.edit', [
+            'products' => $products,
+            'categories' => $categories,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    #[NoReturn] public function update(StoreProductRequest $request, string $id)
     {
-        //
+        $products = Product::query()->findOrFail($id);
+
+        $validatedData = $request->validated();
+//        dd($validatedData);
+
+        $products->update($validatedData);
+
+        return redirect()->route('products.index')->with('success', 'Изменено!');
     }
 
     /**
