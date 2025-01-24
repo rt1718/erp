@@ -24,7 +24,106 @@
 <div class="app-wrapper">
     @yield('nav')
 
-    @yield('aside')
+    <aside class="app-sidebar bg-body-secondary shadow">
+        <div class="sidebar-brand">
+            <!--begin::Brand Link-->
+            <a href="{{ route('admin') }}" class="brand-link">
+                <!--begin::Brand Text-->
+                <span class="brand-text fw-light">{{ env('APP_NAME') }}</span>
+                <!--end::Brand Text-->
+            </a>
+            <!--end::Brand Link-->
+        </div>
+        <div class="sidebar-wrapper">
+            <nav class="mt-2">
+                <!--begin::Sidebar Menu-->
+                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
+                    data-accordion="false">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-cash-stack"></i>
+                            <p>Продажа</p>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
+                    data-accordion="false">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-archive"></i>
+                            <p>
+                                Продукция
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('products.index') }}" class="nav-link">
+                                    <i class="nav-icon bi bi-clipboard2"></i>
+                                    <p>Все товары</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('products.create') }}" class="nav-link">
+                                    <i class="nav-icon bi bi-plus-circle"></i>
+                                    <p>Добавить товар</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon bi bi-pencil-square"></i>
+                                    <p>Изменить товар</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
+                    data-accordion="false">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-box-seam"></i>
+                            <p>
+                                Склад
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('invoice.create') }}" class="nav-link">
+                                    <i class="nav-icon bi bi-check-square"></i>
+                                    <p>Приход</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('inventory.index') }}" class="nav-link">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Остаток</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('white-off.create') }}" class="nav-link">
+                                    <i class="nav-icon bi bi-file-earmark-x"></i>
+                                    <p>Списание</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
+                    data-accordion="false">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-graph-up"></i>
+                            <p>Статистика</p>
+                        </a>
+                    </li>
+                </ul>
+                <!--end::Sidebar Menu-->
+            </nav>
+        </div>
+    </aside>
 
     <main class="app-main">
 

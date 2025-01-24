@@ -31,6 +31,11 @@ Route::prefix('admin')
             ->name('admin');
         Route::resource('/products', ProductController::class);
         Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+
         Route::get('/invoice', [InvoiceController::class, 'create'])->name('invoice.create');
         Route::post('/invoice', [InvoiceController::class, 'store'])->name('invoice.store');
+
+        Route::get('/white-off', [InvoiceController::class, 'create'])->name('white-off.create');
+        Route::post('/white-off', [InvoiceController::class, 'store'])->name('white-off.store');
+
     });
