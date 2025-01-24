@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\AuthorizationController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LogoutController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,4 +31,6 @@ Route::prefix('admin')
             ->name('admin');
         Route::resource('/products', ProductController::class);
         Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+        Route::get('/invoice', [InvoiceController::class, 'create'])->name('invoice.create');
+        Route::post('/invoice', [InvoiceController::class, 'store'])->name('invoice.store');
     });
