@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\AuthorizationController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LogoutController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,5 +28,6 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('/', [AdminController::class, 'index'])
             ->name('admin');
-            Route::resource('/products', ProductController::class);
+        Route::resource('/products', ProductController::class);
+        Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     });
