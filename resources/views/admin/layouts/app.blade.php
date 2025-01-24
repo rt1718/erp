@@ -40,6 +40,7 @@
     <!--end::Footer-->
 </div>
 <!-- Скрипты футер -->
+@yield('js')
 <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.3.0/browser/overlayscrollbars.browser.es6.min.js"
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
