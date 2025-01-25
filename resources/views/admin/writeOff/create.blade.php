@@ -171,80 +171,100 @@
                     </div>
                 @endif
 
-                <form action="{{ route('whiteOff.store') }}" method="post">
+                <form action="{{ route('write-off.store') }}" method="POST">
                     @csrf
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="row mb-3">
-                                        <label for="title" class="form-label">Название</label>
-                                        <div class="mb-10">
-                                            <input name="title" type="text" class="form-control" id="title" value="{{ old('title') }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="quantity" class="form-label">Количество</label>
-                                        <div class="mb-10">
-                                            <input name="quantity" type="text" class="form-control" id="quantity" value="{{ old('quantity') }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="purchase_price" class="form-label">Цена закупка</label>
-                                        <div class="mb-10">
-                                            <input name="purchase_price" type="text" class="form-control" id="purchase_price" value="{{ old('purchase_price') }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label for="content" class="form-label">Цена продажа</label>
-                                        <div class="mb-10">
-                                            <input name="sale_price" type="text" class="form-control" id="sale_price" value="{{ old('sale_price') }}">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="card mb-4">
-
-                                <div class="card-body">
-                                    <div class="row mb-3">
-                                        <label for="unit" class="form-label">Ед. измерения</label>
-                                        <div class="mb-10">
-                                            <input name="unit" type="text" class="form-control" id="unit" value="{{ old('unit') }}">
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="category_id" class="form-label">Категория</label>
-                                        <select name="category_id" class="form-select" id="category_id" required>
-                                            @foreach($categories as $categoryId => $categoryTitle)
-                                                <option value="{{ $categoryId }}">{{ $categoryTitle }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <input type="hidden" id="image" name="image" value="">
-                                        <button type="button" class="btn btn-outline-primary popup_selector" data-inputid="image">Добавить обложку</button>
-                                        <div class="post-image mt-3"></div>
-
-                                    </div>
-
-                                </div>
-                                <div class="card-footer">
-                                    <button type="submit" class="btn btn-primary">Добавить</button>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Название продукта</th>
+                                <th>Количество</th>
+                                <th>Сколько списать</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($products as $product)
+                                <tr class="product-row">
+                                    <td>
+                                        {{ $product->title }}
+                                        <input type="hidden" name="products[{{ $product->id }}][product_id]"
+                                               value="{{ $product->id }}">
+                                        <input type="hidden" name="products[{{ $product->id }}][product_title]"
+                                               value="{{ $product->title }}">
+                                    </td>
+                                    <td>
+                                        {{ $product->quantity }}
+                                    </td>
+                                    <td>
+                                        <input type="number" name="products[{{ $product->id }}][quantity]"
+                                               class="form-control quantity" placeholder="Количество" step="1" min="0"
+                                               value="{{ $product->quantity }}">
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                </form><!--end::Row--> <!--begin::Row-->
+                    <!-- Кнопка отправки формы -->
+                    <div class="card-footer clearfix">
+                        <button type="submit" class="btn btn-success">Добавить списание</button>
+                    </div>
+                </form>
+                <!--end::Row--> <!--begin::Row-->
 
             </div>
         </div>
-@endsection
+        @endsection
 
+        @section('js')
+            @section('js')
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const form = document.querySelector('form');
+                        const rows = document.querySelectorAll('.product-row');
+
+                        // Массив для отслеживания изменённых строк
+                        const changedRows = new Set();
+
+                        // Функция для пересчёта суммы в строке
+                        rows.forEach(row => {
+                            const quantityInput = row.querySelector('.quantity');
+                            const purchasePriceInput = row.querySelector('.purchase-price');
+                            const totalPriceInput = row.querySelector('.total-price');
+
+                            function calculateRowTotal() {
+                                const quantity = parseFloat(quantityInput.value) || 0;
+                                const purchasePrice = parseFloat(purchasePriceInput.value) || 0;
+
+                                // Рассчитываем сумму для строки
+                                const total = quantity * purchasePrice;
+                                totalPriceInput.value = total.toFixed(2);
+
+                                // Помечаем строку как изменённую
+                                if (quantityInput.value || purchasePriceInput.value) {
+                                    changedRows.add(row);
+                                }
+                            }
+
+                            // Добавляем обработчики для пересчёта строки при изменении данных
+                            quantityInput.addEventListener('input', calculateRowTotal);
+                            purchasePriceInput.addEventListener('input', calculateRowTotal);
+                        });
+
+                        // Удаляем строки с неизменёнными данными перед отправкой формы
+                        form.addEventListener('submit', function (event) {
+                            rows.forEach(row => {
+                                const quantity = parseFloat(row.querySelector('.quantity').value) || 0;
+                                const purchasePrice = parseFloat(row.querySelector('.purchase-price').value) || 0;
+
+                                // Если строка не была изменена, очищаем её данные
+                                if (!changedRows.has(row) || (quantity === 0 && purchasePrice === 0)) {
+                                    row.querySelector('.quantity').name = '';
+                                    row.querySelector('.purchase-price').name = '';
+                                }
+                            });
+                        });
+                    });
+
+                </script>
+@endsection
