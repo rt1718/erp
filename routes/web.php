@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthorizationController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\WriteOffController;
 use Illuminate\Support\Facades\Route;
 
 Route::fallback(function () {
@@ -35,7 +36,7 @@ Route::prefix('admin')
         Route::get('/invoice', [InvoiceController::class, 'create'])->name('invoice.create');
         Route::post('/invoice', [InvoiceController::class, 'store'])->name('invoice.store');
 
-        Route::get('/white-off', [InvoiceController::class, 'create'])->name('white-off.create');
-        Route::post('/white-off', [InvoiceController::class, 'store'])->name('white-off.store');
+        Route::get('/write-off', [WriteOffController::class, 'create'])->name('write-off.create');
+        Route::post('/write-off', [WriteOffController::class, 'store'])->name('write-off.store');
 
     });
