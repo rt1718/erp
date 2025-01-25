@@ -40,7 +40,7 @@
                 <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
                     data-accordion="false">
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('sales.index') }}" class="nav-link">
                             <i class="nav-icon bi bi-cash-stack"></i>
                             <p>Продажа</p>
                         </a>
