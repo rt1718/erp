@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthorizationController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\WriteOffController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,5 +39,8 @@ Route::prefix('admin')
 
         Route::get('/write-off', [WriteOffController::class, 'create'])->name('write-off.create');
         Route::post('/write-off', [WriteOffController::class, 'store'])->name('write-off.store');
+
+        Route::get('/sale', [SaleController::class, 'index'])->name('sales.index');
+        Route::post('/sale', [SaleController::class, 'store'])->name('sales.store');
 
     });
