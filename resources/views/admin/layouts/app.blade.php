@@ -37,82 +37,72 @@
         <div class="sidebar-wrapper">
             <nav class="mt-2">
                 <!--begin::Sidebar Menu-->
-                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
-                    data-accordion="false">
+                <ul class="nav sidebar-menu flex-column">
                     <li class="nav-item">
-                        <a href="{{ route('sales.index') }}" class="nav-link">
+                        <a href="{{ route('sales.index') }}" class="nav-link{{ request()->routeIs('sales.index') ? ' active' : '' }}">
                             <i class="nav-icon bi bi-cash-stack"></i>
                             <p>Продажа</p>
                         </a>
                     </li>
                 </ul>
-                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
-                    data-accordion="false">
+
+                <ul class="nav sidebar-menu flex-column" role="menu">
+
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href="{{ route('products.index') }}" class="nav-link{{ request()->routeIs('products.index') ? ' active' : '' }}">
                             <i class="nav-icon bi bi-archive"></i>
-                            <p>
-                                Продукция
-                                <i class="nav-arrow bi bi-chevron-right"></i>
-                            </p>
+                            <p>Все товары</p>
                         </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('products.index') }}" class="nav-link">
-                                    <i class="nav-icon bi bi-clipboard2"></i>
-                                    <p>Все товары</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('products.create') }}" class="nav-link">
-                                    <i class="nav-icon bi bi-plus-circle"></i>
-                                    <p>Добавить товар</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon bi bi-pencil-square"></i>
-                                    <p>Изменить товар</p>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
+                    <li class="nav-item ms-3">
+                        <a href="{{ route('products.create') }}" class="nav-link{{ request()->routeIs('products.create') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-plus-circle"></i>
+                            <p>Добавить товар</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-3">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-pencil-square"></i>
+                            <p>Изменить товар</p>
+                        </a>
+                    </li>
+
                 </ul>
-                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
-                    data-accordion="false">
+
+                <ul class="nav sidebar-menu flex-column">
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon bi bi-box-seam"></i>
                             <p>
                                 Склад
-                                <i class="nav-arrow bi bi-chevron-right"></i>
                             </p>
                         </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ route('invoice.create') }}" class="nav-link">
-                                    <i class="nav-icon bi bi-check-square"></i>
-                                    <p>Приход</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('inventory.index') }}" class="nav-link">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Остаток</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ route('write-off.create') }}" class="nav-link">
-                                    <i class="nav-icon bi bi-file-earmark-x"></i>
-                                    <p>Списание</p>
-                                </a>
-                            </li>
-                        </ul>
+                    </li>
+
+                    <li class="nav-item ms-3">
+                        <a href="{{ route('invoice.create') }}" class="nav-link{{ request()->routeIs('invoice.create') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-check-square"></i>
+                            <p>Приход</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-3">
+                        <a href="{{ route('inventory.index') }}" class="nav-link{{ request()->routeIs('inventory.index') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-circle"></i>
+                            <p>Остаток</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-3">
+                        <a href="{{ route('write-off.create') }}" class="nav-link{{ request()->routeIs('write-off.create') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-file-earmark-x"></i>
+                            <p>Списание</p>
+                        </a>
                     </li>
                 </ul>
-                <br>
-                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu"
-                    data-accordion="false">
+
+                <ul class="nav sidebar-menu flex-column">
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon bi bi-graph-up"></i>
