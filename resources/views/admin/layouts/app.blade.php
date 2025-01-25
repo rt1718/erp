@@ -102,7 +102,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('white-off.create') }}" class="nav-link">
+                                <a href="{{ route('write-off.create') }}" class="nav-link">
                                     <i class="nav-icon bi bi-file-earmark-x"></i>
                                     <p>Списание</p>
                                 </a>
