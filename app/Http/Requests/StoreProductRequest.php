@@ -28,7 +28,6 @@ class StoreProductRequest extends FormRequest
             'sale_price' => ['required', 'numeric'],
             'unit' => ['nullable'],
             'category_id' => ['required', 'exists:categories,id'],
-            'image' => ['nullable'],
         ];
     }
 }

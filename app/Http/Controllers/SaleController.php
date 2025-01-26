@@ -28,6 +28,7 @@ class SaleController extends Controller
         foreach ($validatedData['products'] as $data) {
             $product = Product::findOrFail($data['product_id']);
             $saleQuantity = $data['quantity'];
+            $totalPrice = $data['total_price'];
 
             // Если остаток NULL, пропускаем обновление количества
             if ($product->quantity === null) {
@@ -35,7 +36,7 @@ class SaleController extends Controller
                 ->create([
                     'product_id' => $product->id,
                     'quantity' => $saleQuantity,
-                    'total_price' => $saleQuantity * $product->sale_price,
+                    'total_price' => $totalPrice,
                     'sale_date' => now(),
                 ]);
                 continue;

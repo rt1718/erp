@@ -27,6 +27,7 @@ class StoreSaleRequest extends FormRequest
             'products.*.product_title' => ['required', 'string'], // Проверяем, что product_title передаётся
             'products.*.quantity' => ['nullable', 'numeric', 'min:0'],
             'products.*.price' => ['nullable', 'numeric', 'min:0'],
+            'products.*.total_price' => ['required', 'numeric'],
         ];
     }
 }
