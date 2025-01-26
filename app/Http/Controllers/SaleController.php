@@ -26,17 +26,22 @@ class SaleController extends Controller
         $validatedData = $request->validated();
 
         foreach ($validatedData['products'] as $data) {
-            $product = Product::findOrFail($data['product_id']);
+            $product = Product::query()->findOrFail($data['product_id']);
+
             $saleQuantity = $data['quantity'];
             $totalPrice = $data['total_price'];
 
+            // Рассчитываем итоговую сумму с учётом закупочной цены
+            $totalPriceToStore = !empty($product->purchase_price)
+                ? $totalPrice - ($saleQuantity * $product->purchase_price)
+                : $totalPrice;
+
             // Если остаток NULL, пропускаем обновление количества
             if ($product->quantity === null) {
-                Sale::query()
-                ->create([
+                Sale::query()->create([
                     'product_id' => $product->id,
                     'quantity' => $saleQuantity,
-                    'total_price' => $totalPrice,
+                    'total_price' => $totalPriceToStore,
                     'sale_date' => now(),
                 ]);
                 continue;
@@ -49,17 +54,16 @@ class SaleController extends Controller
                 ]);
             }
 
-            // Обновляем остаток (можно уйти в минус)
+            // Обновляем остаток
             $product->update([
                 'quantity' => $product->quantity - $saleQuantity,
             ]);
 
             // Записываем продажу
-            Sale::query()
-                ->create([
+            Sale::query()->create([
                 'product_id' => $product->id,
                 'quantity' => $saleQuantity,
-                'total_price' => $saleQuantity * $product->sale_price,
+                'total_price' => $totalPriceToStore,
                 'sale_date' => now(),
             ]);
         }
@@ -68,4 +72,5 @@ class SaleController extends Controller
             ->route('sales.index')
             ->with('success', 'Продажа успешно добавлена!');
     }
+
 }

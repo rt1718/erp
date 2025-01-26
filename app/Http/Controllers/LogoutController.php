@@ -9,8 +9,11 @@ class LogoutController extends Controller
 {
     public function logout(Request $request)
     {
-        Auth::logout();
+        if (Auth::check()) {
+            Auth::logout();
+            return redirect('/login');
+        }
 
-        return redirect('/login');
+        return abort(404);
     }
 }

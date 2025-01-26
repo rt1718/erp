@@ -217,7 +217,7 @@
                 const rowTotalInput = row.querySelector('.row-total-input');
 
                 // Пересчёт при изменении количества или цены
-                const debounce = (func, delay = 300) => {
+                const debounce = (func, delay = 1000) => {
                     let timeout;
                     return (...args) => {
                         clearTimeout(timeout);

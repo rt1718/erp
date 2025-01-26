@@ -37,8 +37,18 @@
         <div class="sidebar-wrapper">
             <nav class="mt-2">
                 <!--begin::Sidebar Menu-->
+
                 <ul class="nav sidebar-menu flex-column">
-                    <li class="nav-item">
+                    <li class="nav-item mb-2">
+                        <a href="{{ route('admin') }}" class="nav-link{{ request()->routeIs('admin') ? ' active' : '' }}">
+                            <i class="nav-icon bi bi-cash-stack"></i>
+                            <p>Главная страница</p>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="nav sidebar-menu flex-column">
+                    <li class="nav-item mb-2">
                         <a href="{{ route('sales.index') }}" class="nav-link{{ request()->routeIs('sales.index') ? ' active' : '' }}">
                             <i class="nav-icon bi bi-cash-stack"></i>
                             <p>Продажа</p>
@@ -54,19 +64,19 @@
                             <p>Все товары</p>
                         </a>
                     </li>
-                    <li class="nav-item ms-3">
+                    <li class="nav-item ms-3 mb-2">
                         <a href="{{ route('products.create') }}" class="nav-link{{ request()->routeIs('products.create') ? ' active' : '' }}">
                             <i class="nav-icon bi bi-plus-circle"></i>
                             <p>Добавить товар</p>
                         </a>
                     </li>
 
-                    <li class="nav-item ms-3">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon bi bi-pencil-square"></i>
-                            <p>Изменить товар</p>
-                        </a>
-                    </li>
+{{--                    <li class="nav-item ms-3">--}}
+{{--                        <a href="#" class="nav-link">--}}
+{{--                            <i class="nav-icon bi bi-pencil-square"></i>--}}
+{{--                            <p>Изменить товар</p>--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
 
                 </ul>
 
