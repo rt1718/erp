@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Sale;
-use http\Env\Request;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -16,44 +15,38 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $totalSales = Sale::query()->sum('total_price'); // Общий доход
-        $totalExpenses = Invoice::query()->sum('purchase_price'); // Общий расход
-        $profit = $totalSales - $totalExpenses; // Прибыль
-        $totalProducts = Product::query()->sum('quantity'); // Остатки на складе
+        // Общий доход
+        $totalIncome = Sale::query()
+            ->sum('total_price');
 
-        $incomeExpenseLabels = Sale::query()->selectRaw('DATE(sale_date) as date')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->pluck('date');
-        $incomeData = Sale::query()->selectRaw('SUM(total_price) as income')
-            ->groupBy('sale_date')
-            ->orderBy('sale_date')
-            ->pluck('income');
-        $expenseData = Invoice::query()->selectRaw('SUM(purchase_price) as expense')
-            ->groupBy('created_at')
-            ->orderBy('created_at')
-            ->pluck('expense');
+        // Доход за текущий год
+        $yearIncome = Sale::query()
+            ->whereYear('sale_date', now()
+                ->year)
+            ->sum('total_price');
 
-        // Топ продаваемых товаров
-        $topProducts = Sale::query()->select('product_id', DB::raw('SUM(quantity) as total'))
-            ->groupBy('product_id')
-            ->orderByDesc('total')
-            ->take(10)
-            ->with('product')
+        // Доход за каждый месяц текущего года
+        $monthlyIncomes = Sale::query()
+            ->whereYear('sale_date', now()->year)
+            ->selectRaw('DATE_FORMAT(sale_date, "%M") as month, SUM(total_price) as income')
+            ->groupByRaw('DATE_FORMAT(sale_date, "%M"), MONTH(sale_date)')
+            ->orderByRaw('MONTH(sale_date)')
+            ->pluck('income', 'month');
+
+        // Топ продаваемые товары
+        $topProducts = Sale::query()
+            ->selectRaw('products.title, SUM(sales.quantity) as total_quantity')
+            ->join('products', 'sales.product_id', '=', 'products.id')
+            ->groupBy('products.title')
+            ->orderByDesc('total_quantity')
+            ->limit(5)
             ->get();
-        $topProductsLabels = $topProducts->pluck('product.title');
-        $topProductsData = $topProducts->pluck('total');
 
-        return view('admin.index', compact(
-            'totalSales',
-            'totalExpenses',
-            'profit',
-            'totalProducts',
-            'incomeExpenseLabels',
-            'incomeData',
-            'expenseData',
-            'topProductsLabels',
-            'topProductsData'
-        ));
+        return view('admin.index', [
+            'totalIncome' => $totalIncome,
+            'yearIncome' => $yearIncome,
+            'monthlyIncomes' => $monthlyIncomes,
+            'topProducts' => $topProducts,
+        ]);
     }
 }

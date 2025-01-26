@@ -48,77 +48,41 @@
 @section('content')
     <div class="container-fluid">
         <!-- Карточки с итогами -->
-        <div class="row mt-4">
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-success text-black">
-                    <div class="inner">
-                        <h3>{{ $totalSales }}</h3>
-                        <p>Доход (₽)</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-ruble-sign"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-danger text-black">
-                    <div class="inner">
-                        <h3>{{ $totalExpenses }}</h3>
-                        <p>Расходы (₽)</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6 text-black">
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                        <h3>{{ $profit }}</h3>
-                        <p>Прибыль (₽)</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <div class="small-box bg-info text-black">
-                    <div class="inner">
-                        <h3>{{ $totalProducts }}</h3>
-                        <p>Остатки на складе</p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-boxes"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Графики -->
-            <!-- Доходы и расходы -->
+        <div class="row m-4">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Доходы и Расходы</h3>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="incomeExpenseChart"></canvas>
-                    </div>
-                </div>
+                <h4>Доходы</h4>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Период</th>
+                        <th>Доход</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Общий доход</td>
+                        <td>{{ $totalIncome }} ₽</td>
+                    </tr>
+                    <tr>
+                        <td>Доход за {{ now()->year }}</td>
+                        <td>{{ $yearIncome }} ₽</td>
+                    </tr>
+                    @foreach($monthlyIncomes as $month => $income)
+                        <tr>
+                            <td>{{ $month }}</td>
+                            <td>{{ $income }} ₽</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
             </div>
-
-            <!-- Топ продаваемых товаров -->
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Топ продаваемых товаров</h3>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="topProductsChart"></canvas>
-                    </div>
-                </div>
+            <div class="col-md-5">
+                <h4>Самые продаваемые</h4>
+                <canvas id="topProductsChart"></canvas>
             </div>
         </div>
+
+    </div>
     </div>
 
 @endsection
@@ -127,59 +91,34 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Доходы и расходы
-            const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
-            new Chart(incomeExpenseCtx, {
-                type: 'line',
-                data: {
-                    labels: @json($incomeExpenseLabels), // Даты
-                    datasets: [
-                        {
-                            label: 'Доходы',
-                            data: @json($incomeData), // Массив доходов
-                            borderColor: 'rgba(40, 167, 69, 1)',
-                            backgroundColor: 'rgba(40, 167, 69, 0.2)',
-                            fill: true,
-                        },
-                        {
-                            label: 'Расходы',
-                            data: @json($expenseData), // Массив расходов
-                            borderColor: 'rgba(220, 53, 69, 1)',
-                            backgroundColor: 'rgba(220, 53, 69, 0.2)',
-                            fill: true,
-                        },
-                    ],
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                },
-            });
+            const topProductsChartCtx = document.getElementById('topProductsChart').getContext('2d');
+            const topProducts = @json($topProducts);
 
-            // Топ продаваемых товаров
-            const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
-            new Chart(topProductsCtx, {
-                type: 'pie',
+            const labels = topProducts.map(product => product.title);
+            const data = topProducts.map(product => product.total_quantity);
+
+            new Chart(topProductsChartCtx, {
+                type: 'doughnut',
                 data: {
-                    labels: @json($topProductsLabels), // Названия товаров
+                    labels: labels,
                     datasets: [{
-                        data: @json($topProductsData), // Количество продаж
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.7)',
-                            'rgba(54, 162, 235, 0.7)',
-                            'rgba(255, 206, 86, 0.7)',
-                            'rgba(75, 192, 192, 0.7)',
-                            'rgba(153, 102, 255, 0.7)',
-                        ],
+                        label: 'Количество продаж',
+                        data: data,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
                         hoverOffset: 4,
                     }],
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
                 },
             });
         });
+
     </script>
 @endsection
 
