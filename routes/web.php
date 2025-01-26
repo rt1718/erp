@@ -7,6 +7,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\WriteOffController;
 use Illuminate\Support\Facades\Route;
 

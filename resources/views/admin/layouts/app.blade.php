@@ -101,15 +101,6 @@
                         </a>
                     </li>
                 </ul>
-
-                <ul class="nav sidebar-menu flex-column">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link">
-                            <i class="nav-icon bi bi-graph-up"></i>
-                            <p>Статистика</p>
-                        </a>
-                    </li>
-                </ul>
                 <!--end::Sidebar Menu-->
             </nav>
         </div>

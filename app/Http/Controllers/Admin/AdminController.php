@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Invoice;
+use App\Models\Product;
+use App\Models\Sale;
+use http\Env\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -12,54 +16,44 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('admin.index');
-    }
+        $totalSales = Sale::query()->sum('total_price'); // Общий доход
+        $totalExpenses = Invoice::query()->sum('purchase_price'); // Общий расход
+        $profit = $totalSales - $totalExpenses; // Прибыль
+        $totalProducts = Product::query()->sum('quantity'); // Остатки на складе
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        $incomeExpenseLabels = Sale::query()->selectRaw('DATE(sale_date) as date')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->pluck('date');
+        $incomeData = Sale::query()->selectRaw('SUM(total_price) as income')
+            ->groupBy('sale_date')
+            ->orderBy('sale_date')
+            ->pluck('income');
+        $expenseData = Invoice::query()->selectRaw('SUM(purchase_price) as expense')
+            ->groupBy('created_at')
+            ->orderBy('created_at')
+            ->pluck('expense');
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // Топ продаваемых товаров
+        $topProducts = Sale::query()->select('product_id', DB::raw('SUM(quantity) as total'))
+            ->groupBy('product_id')
+            ->orderByDesc('total')
+            ->take(10)
+            ->with('product')
+            ->get();
+        $topProductsLabels = $topProducts->pluck('product.title');
+        $topProductsData = $topProducts->pluck('total');
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('admin.index', compact(
+            'totalSales',
+            'totalExpenses',
+            'profit',
+            'totalProducts',
+            'incomeExpenseLabels',
+            'incomeData',
+            'expenseData',
+            'topProductsLabels',
+            'topProductsData'
+        ));
     }
 }
