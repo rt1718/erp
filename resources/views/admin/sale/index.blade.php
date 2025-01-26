@@ -88,7 +88,8 @@
                     <ul class="list-group">
                         @foreach($categories as $category)
                             <li class="list-group-item">
-                                <a href="#" class="category-link text-decoration-none text-body" data-category-id="{{ $category->id }}">
+                                <a href="#" class="category-link text-decoration-none text-body"
+                                   data-category-id="{{ $category->id }}">
                                     {{ $category->title }}
                                 </a>
                             </li>
@@ -123,6 +124,7 @@
                                 <th>Название</th>
                                 <th>Цена</th>
                                 <th>Количество</th>
+                                <th>Сумма</th>
                                 <th>Удалить</th>
                             </tr>
                             </thead>
@@ -140,73 +142,124 @@
 
 
 @section('js')
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const categoryLinks = document.querySelectorAll('.category-link');
-                        const productItems = document.querySelectorAll('.product-item');
-                        const productList = document.querySelector('.product-list');
-                        const cart = document.getElementById('cart');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const categoryLinks = document.querySelectorAll('.category-link');
+            const productItems = document.querySelectorAll('.product-item');
+            const cart = document.getElementById('cart');
 
-                        // Функция фильтрации товаров по категории
-                        categoryLinks.forEach(link => {
-                            link.addEventListener('click', function (e) {
-                                e.preventDefault();
-                                const categoryId = this.dataset.categoryId;
+            // Итоговая сумма корзины
+            const totalElement = document.createElement('div');
+            totalElement.classList.add('mt-3', 'fw-bold');
+            totalElement.textContent = 'Итоговая сумма: 0';
+            cart.parentNode.appendChild(totalElement);
 
-                                // Показываем только те товары, которые принадлежат выбранной категории
-                                productItems.forEach(item => {
-                                    if (item.dataset.categoryId === categoryId) {
-                                        item.style.display = 'list-item';
-                                    } else {
-                                        item.style.display = 'none';
-                                    }
-                                });
-                            });
-                        });
+            // Функция пересчёта итоговой суммы корзины
+            function calculateTotal() {
+                let total = 0;
+                const rows = cart.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const price = parseFloat(row.querySelector('input[name$="[price]"]').value) || 0;
+                    const quantity = parseFloat(row.querySelector('input[name$="[quantity]"]').value) || 0;
+                    const rowTotalInput = row.querySelector('.row-total-input');
 
-                        // Функция добавления товара в корзину
-                        function addToCart(event) {
-                            const productId = this.dataset.productId;
-                            const productTitle = this.dataset.productTitle;
-                            const productPrice = this.dataset.productPrice;
+                    // Пересчитываем итоговую сумму для строки
+                    const rowTotal = price * quantity;
+                    rowTotalInput.value = rowTotal.toFixed(2);
 
-                            // Проверка на дублирование
-                            if (cart.querySelector(`[data-product-id="${productId}"]`)) {
-                                alert('Этот товар уже в корзине');
-                                return;
-                            }
+                    // Добавляем к общей сумме корзины
+                    total += rowTotal;
+                });
+                totalElement.textContent = `Итоговая сумма: ${total.toFixed(2)}`;
+            }
 
-                            const row = document.createElement('tr');
-                            row.dataset.productId = productId;
+            // Функция добавления товара в корзину
+            function addToCart(event) {
+                const productId = this.dataset.productId;
+                const productTitle = this.dataset.productTitle;
+                const productPrice = parseFloat(this.dataset.productPrice);
 
-                            row.innerHTML = `
-                <td>
-                    ${productTitle}
-                    <input type="hidden" name="products[${productId}][product_id]" value="${productId}">
-                    <input type="hidden" name="products[${productId}][product_title]" value="${productTitle}">
-                </td>
-                <td>
-                    <input type="number" name="products[${productId}][price]" class="form-control" value="${productPrice}" step="0.01">
-                </td>
-                <td>
-                    <input type="number" name="products[${productId}][quantity]" class="form-control" value="1" min="1" step="1">
-                </td>
-                <td>
-                    <button type="button" class="btn btn-danger btn-sm remove-item">×</button>
-                </td>
-            `;
+                // Проверка на дублирование
+                const existingRow = cart.querySelector(`[data-product-id="${productId}"]`);
+                if (existingRow) {
+                    const quantityInput = existingRow.querySelector('input[name$="[quantity]"]');
+                    quantityInput.value = parseInt(quantityInput.value) + 1;
+                    calculateTotal();
+                    return;
+                }
 
-                            row.querySelector('.remove-item').addEventListener('click', function () {
-                                row.remove();
-                            });
+                const row = document.createElement('tr');
+                row.dataset.productId = productId;
 
-                            cart.appendChild(row);
-                        }
+                row.innerHTML = `
+            <td>
+                ${productTitle}
+                <input type="hidden" name="products[${productId}][product_id]" value="${productId}">
+                <input type="hidden" name="products[${productId}][product_title]" value="${productTitle}">
+            </td>
+            <td>
+                <input type="number" name="products[${productId}][price]" class="form-control price-input" value="${productPrice}" step="0.01">
+            </td>
+            <td>
+                <input type="number" name="products[${productId}][quantity]" class="form-control quantity-input" value="1" min="1" step="1">
+            </td>
+            <td>
+                <input type="number" name="products[${productId}][total_price]" class="form-control row-total-input" value="${productPrice}" step="0.01">
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-item">×</button>
+            </td>
+        `;
 
-                        // Назначаем обработчики клика для каждого товара
-                        productItems.forEach(item => {
-                            item.addEventListener('click', addToCart);
-                        });
-                    });
-                </script>
+                // Обработчики событий для пересчёта при изменении данных
+                const priceInput = row.querySelector('.price-input');
+                const quantityInput = row.querySelector('.quantity-input');
+                const rowTotalInput = row.querySelector('.row-total-input');
+
+                // Пересчёт при изменении количества или цены
+                const debounce = (func, delay = 300) => {
+                    let timeout;
+                    return (...args) => {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(() => func(...args), delay);
+                    };
+                };
+
+                const calculateRowTotal = debounce(() => {
+                    const quantity = parseFloat(quantityInput.value) || 0;
+                    const price = parseFloat(priceInput.value) || 0;
+
+                    rowTotalInput.value = (quantity * price).toFixed(2);
+                    calculateTotal();
+                });
+
+                const calculatePriceFromTotal = debounce(() => {
+                    const quantity = parseFloat(quantityInput.value) || 1; // Защита от деления на 0
+                    const rowTotal = parseFloat(rowTotalInput.value) || 0;
+
+                    priceInput.value = (rowTotal / quantity).toFixed(2);
+                    calculateTotal();
+                });
+
+                quantityInput.addEventListener('input', calculateRowTotal);
+                priceInput.addEventListener('input', calculateRowTotal);
+                rowTotalInput.addEventListener('input', calculatePriceFromTotal);
+
+                // Удаление строки
+                row.querySelector('.remove-item').addEventListener('click', function () {
+                    row.remove();
+                    calculateTotal();
+                });
+
+                cart.appendChild(row);
+                calculateTotal();
+            }
+
+            // Назначаем обработчики клика для каждого товара
+            productItems.forEach(item => {
+                item.addEventListener('click', addToCart);
+            });
+        });
+
+    </script>
 @endsection
